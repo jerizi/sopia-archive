@@ -5,24 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOPIA ARCHIVE</title>
 <style>
-  body {margin:0; padding:0; background:#000; color:#e60000; font-family:sans-serif;}
-  header {position:fixed; top:0; left:0; width:100%; background:#0e0e0e; display:flex; justify-content:space-between; align-items:center; padding:10px 20px; z-index:1000; border-bottom:1px solid #333;}
-  header h1 {font-size:1.5rem; margin:0;}
-  .menu-icon {font-size:1.8rem; cursor:pointer; margin-left:10px;} /* 살짝 안쪽으로 */
-  nav {position:fixed; top:50px; left:-220px; width:220px; background:#151515; height:100%; padding-top:20px; transition:0.3s; z-index:999;}
-  nav a {display:block; color:#e60000; padding:10px 20px; text-decoration:none;}
-  nav a:hover {background:#1a1a1a;}
-  main {padding-top:70px; max-width:700px; margin:0 auto; padding-bottom:40px;}
-  .card, .year-card, .song-card, .chem-card, .clip-card {border:1px solid #333; border-radius:8px; margin-bottom:15px; cursor:pointer; background:#151515; padding:15px;}
-  .card:hover, .year-card:hover, .song-card:hover, .chem-card:hover, .clip-card:hover {background:#1a1a1a;}
-  .clips, .chem-detail, .year-clips {display:none; padding:10px 0 10px 15px;}
-  .clip, .song, .chem-clip {display:flex; align-items:center; margin-bottom:10px; cursor:pointer;}
-  .clip img, .song img, .chem-clip img {width:80px; height:45px; object-fit:cover; margin-right:10px; border-radius:4px;}
-  .chem-card img {width:60px; height:60px; object-fit:cover; border-radius:50%; margin-right:10px;}
-  .chem-detail img {width:100px; height:60px; object-fit:cover; margin-right:10px; border-radius:4px;}
-  .filter {display:flex; gap:10px; margin-bottom:15px;}
-  .filter button {background:#1a1a1a; border:none; color:#e60000; padding:5px 10px; border-radius:4px; cursor:pointer;}
-  .filter button.active {background:#e60000; color:#000;}
+body {margin:0; padding:0; background:#000; color:#e60000; font-family:sans-serif;}
+header {position:fixed; top:0; left:0; width:100%; background:#0e0e0e; display:flex; justify-content:space-between; align-items:center; padding:10px 20px; z-index:1000; border-bottom:1px solid #333;}
+header h1 {font-size:1.5rem; margin:0;}
+.menu-icon {font-size:1.8rem; cursor:pointer; margin-left:10px;}
+nav {position:fixed; top:50px; left:-220px; width:220px; background:#151515; height:100%; padding-top:20px; transition:0.3s; z-index:999;}
+nav a {display:block; color:#e60000; padding:10px 20px; text-decoration:none;}
+nav a:hover {background:#1a1a1a;}
+main {padding-top:70px; max-width:700px; margin:0 auto; padding-bottom:40px;}
+.card, .year-card, .song-card, .chem-card, .clip-card {border:1px solid #333; border-radius:8px; margin-bottom:15px; cursor:pointer; background:#151515; padding:15px;}
+.card:hover, .year-card:hover, .song-card:hover, .chem-card:hover, .clip-card:hover {background:#1a1a1a;}
+.clips, .chem-detail, .year-clips {display:none; padding:10px 0 10px 15px;}
+.clip, .song, .chem-clip {display:flex; align-items:center; margin-bottom:10px; cursor:pointer;}
+.clip img, .song img, .chem-clip img {width:80px; height:45px; object-fit:cover; margin-right:10px; border-radius:4px;}
+.chem-card img {width:60px; height:60px; object-fit:cover; border-radius:50%; margin-right:10px;}
+.chem-detail img {width:100px; height:60px; object-fit:cover; margin-right:10px; border-radius:4px;}
+.filter {display:flex; gap:10px; margin-bottom:15px;}
+.filter button {background:#1a1a1a; border:none; color:#e60000; padding:5px 10px; border-radius:4px; cursor:pointer;}
+.filter button.active {background:#e60000; color:#000;}
 </style>
 </head>
 <body>
@@ -42,12 +42,13 @@
 <main id="archive-section"></main>
 
 <script>
+// 메뉴 토글
 function toggleMenu(){
   const menu = document.getElementById('menu');
   menu.style.left = (menu.style.left==='0px') ? '-220px' : '0px';
 }
 
-/* 데이터 */
+// 데이터
 const data = {
   years:[
     {year:"2023", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", clips:[
@@ -59,19 +60,32 @@ const data = {
     {songType:"cover", title:"커버곡 예시", date:"2023-05-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"},
     {songType:"original", title:"오리지널곡 예시", date:"2023-06-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
   ],
-  chemistry:[
-    {chemistryId:"sopia-jingburger", chemName:"𝕁𝕀ℕ𝔾ℙ𝕀𝔸", chemSub:"징버거 × 소피아", img:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg", clips:[
-      {title:"부가땅 생일선물로 빵 준 소피아", date:"2025-10-08", tags:["생일"], thumb:"https://wilful-aqua-wbpms0zisq.edgeone.app/2023_09_07_22_22_39.png", link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"}
-    ]}
-  ],
   clips:[
     {year:"2023", title:"클립 예시", date:"2023-07-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
   ]
 };
 
+// Chemistry 멤버 데이터
+const chemistryMembers = [
+  {
+    name:"징버거", 
+    img:"https://wilful-aqua-wbpms0zisq.edgeone.app/2023_09_07_22_22_39.png", 
+    chemistryWithSopia:[
+      {title:"징피아 클립 예시", date:"2025-10-08", tags:["합방"], thumb:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg", link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"}
+    ]
+  },
+  {
+    name:"비밀소녀", 
+    img:"https://wilful-aqua-wbpms0zisq.edgeone.app/secretto_profile.png", 
+    chemistryWithSopia:[
+      {title:"Sopia × 비밀소녀 클립", date:"2025-09-15", tags:["게임"], thumb:"https://wilful-aqua-wbpms0zisq.edgeone.app/secretto_clip.png", link:"https://youtu.be/example2"}
+    ]
+  }
+];
+
 const section = document.getElementById('archive-section');
 
-/* 페이지 전환 */
+// 페이지 전환
 function showPage(page){
   section.innerHTML="";
   if(page==="home") renderHome();
@@ -80,7 +94,7 @@ function showPage(page){
   else if(page==="clips") renderClips();
 }
 
-/* Home */
+// Home
 function renderHome(){
   data.years.forEach(y=>{
     let card = document.createElement('div');
@@ -103,7 +117,7 @@ function renderHome(){
   });
 }
 
-/* Songs */
+// Songs
 function renderSongs(){
   let filterDiv = document.createElement('div');
   filterDiv.className="filter";
@@ -124,31 +138,47 @@ function renderSongs(){
   });
 }
 
-/* Chemistry */
+// Chemistry (멤버 카드)
 function renderChemistry(){
-  // 케미 선택 화면
-  data.chemistry.forEach(c=>{
+  section.innerHTML="";
+  chemistryMembers.forEach(m=>{
     let card = document.createElement('div');
     card.className="chem-card card";
-    card.innerHTML=`<img src="${c.img}"><span>${c.members.join(" × ")}</span>`;
+    card.innerHTML=`<img src="${m.img}"><span>${m.name}</span>`;
     
-    let chemDetail = document.createElement('div');
-    chemDetail.className="chem-detail";
-    c.clips.forEach(cl=>{
-      let clip = document.createElement('div');
-      clip.className="chem-clip card";
-      clip.innerHTML=`<img src="${cl.thumb}"><div><strong>${cl.title}</strong><br>${cl.date}<br>태그: ${cl.tags.join(", ")}</div>`;
-      clip.onclick=()=>{window.open(cl.link,"_blank")};
-      chemDetail.appendChild(clip);
-    });
-    
-    card.onclick=()=>{chemDetail.style.display=chemDetail.style.display==="block"?"none":"block";};
+    card.onclick=()=>{renderChemistryDetail(m)};
     section.appendChild(card);
-    section.appendChild(chemDetail);
   });
 }
 
-/* Clips */
+// Chemistry 상세 화면
+function renderChemistryDetail(member){
+  section.innerHTML="";
+  
+  let titleDiv = document.createElement('div');
+  titleDiv.style.marginBottom="15px";
+  titleDiv.innerHTML=`<h2 style="margin:0;">${member.name} × Sopia</h2>`;
+  section.appendChild(titleDiv);
+  
+  let imgDiv = document.createElement('div');
+  imgDiv.style.marginBottom="15px";
+  imgDiv.innerHTML=`<img src="${member.img}" style="width:100px; height:100px; border-radius:50%;">`;
+  section.appendChild(imgDiv);
+  
+  let detailDiv = document.createElement('div');
+  member.chemistryWithSopia.forEach(cl=>{
+    let clip = document.createElement('div');
+    clip.className="chem-clip card";
+    clip.style.display="flex"; clip.style.alignItems="center"; clip.style.marginBottom="10px";
+    clip.innerHTML=`<img src="${cl.thumb}" style="width:80px; height:45px; object-fit:cover; margin-right:10px; border-radius:4px;">
+                     <div><strong>${cl.title}</strong><br>${cl.date}<br>태그: ${cl.tags.join(", ")}</div>`;
+    clip.onclick=()=>{window.open(cl.link,"_blank")};
+    detailDiv.appendChild(clip);
+  });
+  section.appendChild(detailDiv);
+}
+
+// Clips
 function renderClips(){
   data.clips.forEach(c=>{
     let card = document.createElement('div');
@@ -159,7 +189,7 @@ function renderClips(){
   });
 }
 
-// 초기 로딩
+// 초기 화면
 showPage('home');
 </script>
 
