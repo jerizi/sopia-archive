@@ -16,7 +16,7 @@
   .member-grid {display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;}
   .member-card {width:80px; cursor:pointer; text-align:center;}
   .member-card img {width:80px; height:80px; border-radius:50%; object-fit:cover;}
-  .chem-detail img {width:100%; max-width:320px; height:auto; border-radius:4px; margin-bottom:10px;}
+  .chem-detail img {width:100%; max-width:100%; height:auto; border-radius:4px; margin-bottom:10px;}
   .chem-clip {display:flex; align-items:center; margin-bottom:10px; cursor:pointer;}
   .chem-clip img {width:120px; height:67px; object-fit:cover; margin-right:10px; border-radius:4px;}
 </style>
@@ -40,7 +40,7 @@ function toggleMenu(){
   menu.style.left = (menu.style.left==='0px') ? '-220px' : '0px';
 }
 
-/* 🟢 Chemistry 데이터 예시 */
+/* 🟢 Chemistry 데이터 (징버거 예시) */
 const data = {
   chemistry:[
     {
@@ -48,6 +48,7 @@ const data = {
         {
           name:"징버거",
           img:"https://wilful-aqua-wbpms0zisq.edgeone.app/2023_09_07_22_22_39.png",
+          mainImg:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg",
           chemistryWithSopia:[
             {
               title:"부가땅 생일선물로 빵 준 소피아",
@@ -56,14 +57,13 @@ const data = {
               thumb:"https://img.youtube.com/vi/r3jrA2LlWSs/0.jpg",
               link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"
             }
-          ],
-          mainImg:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg"
+          ]
         },
         {
           name:"비밀소녀",
-          img:"https://via.placeholder.com/80", // 임시 이미지
-          chemistryWithSopia:[],
-          mainImg:"https://via.placeholder.com/320x180" // 임시 대표 이미지
+          img:"https://via.placeholder.com/80",
+          mainImg:"https://via.placeholder.com/320x180",
+          chemistryWithSopia:[]
         }
       ]
     }
@@ -102,9 +102,13 @@ function renderChemistryDetail(member){
   titleDiv.innerHTML=`<h2 style="margin:0;">${member.name} × Sopia</h2>`;
   section.appendChild(titleDiv);
 
-  // 대표 이미지 (16:9 비율 유지)
+  // 대표 이미지 (원본 비율 유지)
   let imgDiv = document.createElement('div');
-  imgDiv.innerHTML=`<img src="${member.mainImg}">`;
+  let mainImg = document.createElement('img');
+  mainImg.src = member.mainImg;
+  mainImg.style.width = "100%";
+  mainImg.style.height = "auto";
+  imgDiv.appendChild(mainImg);
   section.appendChild(imgDiv);
 
   // 클립 리스트
