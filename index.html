@@ -13,17 +13,13 @@
   nav a {display:block; color:#e60000; padding:10px 20px; text-decoration:none;}
   nav a:hover {background:#1a1a1a;}
   main {padding-top:70px; max-width:700px; margin:0 auto; padding-bottom:40px;}
-  .year-card, .song-card, .chem-card, .clip-card {border:1px solid #333; border-radius:8px; margin-bottom:15px; cursor:pointer; background:#151515; padding:15px;}
-  .year-card:hover, .song-card:hover, .chem-card:hover, .clip-card:hover {background:#1a1a1a;}
-  .clips, .chem-detail {display:none; padding:10px 0 10px 15px;}
-  .clip, .song, .chem-clip {display:flex; align-items:center; margin-bottom:10px; cursor:pointer;}
-  .clip img, .song img, .chem-clip img {width:80px; height:45px; object-fit:cover; margin-right:10px; border-radius:4px;}
+  .card {border:1px solid #333; border-radius:8px; margin-bottom:15px; cursor:pointer; background:#151515; padding:15px;}
+  .card:hover {background:#1a1a1a;}
   .chem-card img {width:60px; height:60px; object-fit:cover; border-radius:50%; margin-right:10px;}
-  .chem-card span {vertical-align:middle;}
   .chem-detail img {width:100px; height:60px; object-fit:cover; margin-right:10px; border-radius:4px;}
-  .filter {display:flex; gap:10px; margin-bottom:15px;}
-  .filter button {background:#1a1a1a; border:none; color:#e60000; padding:5px 10px; border-radius:4px; cursor:pointer;}
-  .filter button.active {background:#e60000; color:#000;}
+  .clips, .chem-detail {display:none; padding:10px 0 10px 15px;}
+  .chem-clip {display:flex; align-items:center; margin-bottom:10px; cursor:pointer;}
+  .chem-clip div {line-height:1.2;}
 </style>
 </head>
 <body>
@@ -40,9 +36,7 @@
   <a href="#" onclick="showPage('clips')">Clips</a>
 </nav>
 
-<main id="archive-section">
-  <!-- 콘텐츠 렌더링 -->
-</main>
+<main id="archive-section"></main>
 
 <script>
 function toggleMenu(){
@@ -50,115 +44,63 @@ function toggleMenu(){
   menu.style.left = (menu.style.left==='0px') ? '-220px' : '0px';
 }
 
-/* 🟢 데이터 */
+/* 데이터 */
 const data = {
-  years:[
-    {year:"2023", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", clips:[
-      {title:"Sopia가 알려주는 soop 통계", date:"2023-01-06", desc:"설명 작성 가능", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"},
-      {title:"Sopia의 최애 콘텐츠 아라포", date:"2023-01-06", desc:"설명 작성 가능", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
-    ]}
-  ],
-  songs:[
-    {songType:"cover", title:"커버곡 예시", date:"2023-05-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"},
-    {songType:"original", title:"오리지널곡 예시", date:"2023-06-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
-  ],
   chemistry:[
-    {chemistryId:"sopia-jingburger", chemName:"징피아", members:["소피아","징버거"], img:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg", clips:[
-      {title:"부가땅 생일선물로 빵 준 소피아", date:"2025-10-08", tags:["생일"], thumb:"https://wilful-aqua-wbpms0zisq.edgeone.app/2023_09_07_22_22_39.png", link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"}
-    ]}
-  ],
-  clips:[
-    {year:"2023", title:"클립 예시", date:"2023-07-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
+    {
+      chemistryId:"sopia-jingburger",
+      chemName:"𝕁𝕀ℕ𝔾ℙ𝕀𝔸",
+      chemSub:"징버거 × 소피아",
+      img:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg",
+      clips:[
+        {title:"부가땅 생일선물로 빵 준 소피아", date:"2025-10-08", tags:["생일"], thumb:"https://wilful-aqua-wbpms0zisq.edgeone.app/2023_09_07_22_22_39.png", link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"}
+      ]
+    }
   ]
 };
 
 const section = document.getElementById('archive-section');
 
-/* 🟢 페이지 전환 */
+/* 페이지 전환 */
 function showPage(page){
   section.innerHTML="";
-  if(page==="home") renderHome();
-  else if(page==="songs") renderSongs();
-  else if(page==="chemistry") renderChemistry();
-  else if(page==="clips") renderClips();
+  if(page==="chemistry") renderChemistryDetail();
+  else section.innerHTML="<div style='text-align:center; margin-top:50px;'>"+page+" 페이지 구현 중</div>";
 }
 
-/* 🟢 Home */
-function renderHome(){
-  data.years.forEach(y=>{
-    let card = document.createElement('div');
-    card.className="year-card";
-    card.innerHTML=`<strong>${y.year}</strong><br><img src="${y.thumb}" style="width:100%; margin-top:5px; border-radius:4px;">`;
-    let clipsDiv = document.createElement('div');
-    clipsDiv.className="clips";
-    y.clips.forEach(c=>{
-      let clip = document.createElement('div');
-      clip.className="clip";
-      clip.innerHTML=`<img src="${c.thumb}"><div><span>${c.title}</span><br><span>${c.date}</span><br><span>${c.desc}</span></div>`;
-      clip.onclick=()=>{window.open(c.link,"_blank")};
-      clipsDiv.appendChild(clip);
-    });
-    card.onclick=()=>{clipsDiv.style.display=clipsDiv.style.display==="block"?"none":"block";};
-    section.appendChild(card);
-    section.appendChild(clipsDiv);
-  });
-}
-
-/* 🟢 Songs */
-function renderSongs(){
-  let filterDiv = document.createElement('div');
-  filterDiv.className="filter";
-  ['최신순','커버','오리지널곡'].forEach(f=>{
-    let btn = document.createElement('button');
-    btn.textContent=f;
-    btn.onclick=()=>{alert(f+" 필터 클릭 (추후 구현)");};
-    filterDiv.appendChild(btn);
-  });
-  section.appendChild(filterDiv);
-  data.songs.forEach(s=>{
-    let card = document.createElement('div');
-    card.className="song-card";
-    card.innerHTML=`<div class="song"><img src="${s.thumb}"><div><strong>${s.title}</strong><br>${s.date}</div></div>`;
-    card.onclick=()=>{window.open(s.link,"_blank")};
-    section.appendChild(card);
-  });
-}
-
-/* 🟢 Chemistry */
-function renderChemistry(){
-  // 케미 선택 화면
+/* Chemistry 상세 화면 */
+function renderChemistryDetail(){
   data.chemistry.forEach(c=>{
-    let card = document.createElement('div');
-    card.className="chem-card";
-    card.innerHTML=`<img src="${c.img}"><span>${c.members.join(" × ")}</span>`;
-    let chemDetail = document.createElement('div');
-    chemDetail.className="chem-detail";
+    // 케미명 + 서브
+    const title = document.createElement('div');
+    title.innerHTML=`<h2 style="margin:0;">${c.chemName}</h2><small style="color:#ff6666;">${c.chemSub}</small>`;
+    section.appendChild(title);
+    
+    // 대표 이미지
+    const img = document.createElement('img');
+    img.src=c.img;
+    img.style.width="100%";
+    img.style.borderRadius="8px";
+    img.style.margin="10px 0 20px 0";
+    section.appendChild(img);
+    
+    // 콘텐츠 리스트
+    const detailDiv = document.createElement('div');
+    detailDiv.className="chem-detail";
     c.clips.forEach(cl=>{
-      let clip = document.createElement('div');
-      clip.className="chem-clip";
-      clip.innerHTML=`<img src="${cl.thumb}"><div><strong>${cl.title}</strong><br>${cl.date}<br>${cl.tags.join(", ")}</div>`;
-      clip.onclick=()=>{window.open(cl.link,"_blank")};
-      chemDetail.appendChild(clip);
+      const card = document.createElement('div');
+      card.className="chem-clip card";
+      card.innerHTML=`<img src="${cl.thumb}"><div><strong>${cl.title}</strong><br>${cl.date}<br>태그: ${cl.tags.join(", ")}</div>`;
+      card.onclick=()=>{window.open(cl.link,"_blank")};
+      detailDiv.appendChild(card);
     });
-    card.onclick=()=>{chemDetail.style.display=chemDetail.style.display==="block"?"none":"block";};
-    section.appendChild(card);
-    section.appendChild(chemDetail);
+    detailDiv.style.display="block";
+    section.appendChild(detailDiv);
   });
 }
 
-/* 🟢 Clips */
-function renderClips(){
-  data.clips.forEach(c=>{
-    let card = document.createElement('div');
-    card.className="clip-card";
-    card.innerHTML=`<div class="clip"><img src="${c.thumb}"><div><strong>${c.title}</strong><br>${c.date}</div></div>`;
-    card.onclick=()=>{window.open(c.link,"_blank")};
-    section.appendChild(card);
-  });
-}
-
-// 초기 로딩 홈
-showPage('home');
+// 초기 로딩
+showPage('chemistry');
 </script>
 
 </body>
