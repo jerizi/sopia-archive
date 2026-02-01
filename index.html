@@ -12,7 +12,7 @@
   nav {position:fixed; top:50px; left:-220px; width:220px; background:#151515; height:100%; padding-top:20px; transition:0.3s; z-index:999;}
   nav a {display:block; color:#e60000; padding:10px 20px; text-decoration:none;}
   nav a:hover {background:#1a1a1a;}
-  main {padding-top:170px; max-width:700px; margin:0 auto; padding-bottom:40px;}
+  main {padding-top:70px; max-width:700px; margin:0 auto; padding-bottom:40px;}
   .year-card, .song-card, .chem-card, .clip-card {border:1px solid #333; border-radius:8px; margin-bottom:15px; cursor:pointer; background:#151515; padding:15px;}
   .year-card:hover, .song-card:hover, .chem-card:hover, .clip-card:hover {background:#1a1a1a;}
   .clips, .chem-detail {display:none; padding:10px 0 10px 15px;}
@@ -27,15 +27,6 @@
   .member-grid {display:flex; flex-wrap:wrap; gap:10px;}
   .member-card {width:80px; cursor:pointer; text-align:center;}
   .member-card img {width:80px; height:80px; border-radius:50%; object-fit:cover;}
-  /* 달력 스타일 */
-  .calendar-container {position:fixed; top:50px; left:0; width:100%; background:#0e0e0e; z-index:998; text-align:center; padding:10px 0; border-bottom:1px solid #333;}
-  .calendar-header {display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:5px;}
-  .calendar-header button {background:#1a1a1a; color:#e60000; border:none; padding:5px 10px; cursor:pointer; border-radius:4px;}
-  .calendar-grid {display:grid; grid-template-columns:repeat(7, 1fr); gap:2px; text-align:center; max-width:350px; margin:0 auto;}
-  .calendar-grid div {padding:6px 0; border-radius:4px;}
-  .calendar-grid .day-header {font-weight:bold; color:#ff6666;}
-  .calendar-grid .day {background:#151515; cursor:pointer;}
-  .calendar-grid .day:hover {background:#1a1a1a;}
 </style>
 </head>
 <body>
@@ -51,18 +42,6 @@
   <a href="#" onclick="showPage('chemistry')">Chemistry</a>
   <a href="#" onclick="showPage('clips')">Clips</a>
 </nav>
-
-<!-- 달력 -->
-<div class="calendar-container">
-  <div class="calendar-header">
-    <button id="prev">&lt;</button>
-    <span id="month-year"></span>
-    <button id="next">&gt;</button>
-  </div>
-  <div class="calendar-grid" id="calendar-grid">
-    <!-- 요일 + 날짜 표시 -->
-  </div>
-</div>
 
 <main id="archive-section"></main>
 
@@ -91,6 +70,7 @@ const data = {
           ],
           mainImg:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg"
         }
+        // 여기에 다른 멤버 추가 가능
       ]
     }
   ]
@@ -106,6 +86,7 @@ function showPage(page){
 
 /* 🟢 Chemistry */
 function renderChemistry(){
+  // 멤버 프로필 카드 리스트
   let grid = document.createElement('div');
   grid.className="member-grid";
   data.chemistry[0].members.forEach(m=>{
@@ -121,16 +102,20 @@ function renderChemistry(){
 /* 🟢 Chemistry 상세 */
 function renderChemistryDetail(member){
   section.innerHTML="";
+
+  // 케미 타이틀
   let titleDiv = document.createElement('div');
   titleDiv.style.marginBottom="15px";
   titleDiv.innerHTML=`<h2 style="margin:0;">${member.name} × Sopia</h2>`;
   section.appendChild(titleDiv);
 
+  // 대표 이미지 (mainImg)
   let imgDiv = document.createElement('div');
   imgDiv.style.marginBottom="15px";
-  imgDiv.innerHTML=`<img src="${member.mainImg}" style="max-width:100%; height:auto; border-radius:8px;">`;
+  imgDiv.innerHTML=`<img src="${member.mainImg}" style="width:150px; height:150px; border-radius:8px;">`;
   section.appendChild(imgDiv);
 
+  // 클립 리스트
   let detailDiv = document.createElement('div');
   member.chemistryWithSopia.forEach(cl=>{
     let clip = document.createElement('div');
@@ -150,50 +135,6 @@ function renderChemistryDetail(member){
 
 // 초기 로딩 Chemistry
 showPage('chemistry');
-
-/* 🟢 달력 JS */
-const startYear = 2024, startMonth=1, endYear=2027, endMonth=1;
-let currentYear = startYear, currentMonth = startMonth;
-const monthYearSpan = document.getElementById('month-year');
-const calendarGrid = document.getElementById('calendar-grid');
-const daysOfWeek = ['일','월','화','수','목','금','토'];
-
-function renderCalendar(year, month){
-  calendarGrid.innerHTML='';
-  // 요일
-  for(const d of daysOfWeek){
-    const div = document.createElement('div');
-    div.className='day-header';
-    div.textContent=d;
-    calendarGrid.appendChild(div);
-  }
-  const firstDay = new Date(year, month-1, 1).getDay();
-  const lastDate = new Date(year, month, 0).getDate();
-  for(let i=0;i<firstDay;i++){
-    calendarGrid.appendChild(document.createElement('div'));
-  }
-  for(let d=1; d<=lastDate; d++){
-    const div = document.createElement('div');
-    div.className='day';
-    div.textContent=d;
-    calendarGrid.appendChild(div);
-  }
-  monthYearSpan.textContent=`${year}년 ${month}월`;
-}
-
-document.getElementById('prev').onclick = ()=>{
-  currentMonth--; if(currentMonth<1){currentMonth=12; currentYear--;}
-  if(currentYear<startYear || (currentYear===startYear && currentMonth<startMonth)) return;
-  renderCalendar(currentYear, currentMonth);
-};
-document.getElementById('next').onclick = ()=>{
-  currentMonth++; if(currentMonth>12){currentMonth=1; currentYear++;}
-  if(currentYear>endYear || (currentYear===endYear && currentMonth>endMonth)) return;
-  renderCalendar(currentYear, currentMonth);
-};
-
-// 초기 달력 렌더
-renderCalendar(currentYear, currentMonth);
 </script>
 
 </body>
