@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOPIA ARCHIVE</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
   body {margin:0; padding:0; background:#000; color:#e60000; font-family:sans-serif;}
   header {position:fixed; top:0; left:0; width:100%; background:#0e0e0e; display:flex; justify-content:space-between; align-items:center; padding:10px 15px; z-index:1000; border-bottom:1px solid #333;}
   header h1 {font-size:1.5rem; margin:0;}
@@ -13,12 +14,18 @@
   nav a {display:block; color:#e60000; padding:10px 20px; text-decoration:none;}
   nav a:hover {background:#1a1a1a;}
   main {padding-top:70px; max-width:700px; margin:0 auto; padding-bottom:40px;}
-  .member-grid {display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;}
-  .member-card {width:80px; cursor:pointer; text-align:center;}
-  .member-card img {width:80px; height:80px; border-radius:50%; object-fit:cover;}
-  .chem-detail img {width:100%; max-width:100%; height:auto; border-radius:4px; margin-bottom:10px;}
+  .year-card, .song-card, .clip-card {border:1px solid #333; border-radius:8px; margin-bottom:15px; cursor:pointer; background:#151515; padding:15px;}
+  .year-card:hover, .song-card:hover, .clip-card:hover {background:#1a1a1a;}
+  .clips, .songs-list {display:none; padding:10px 0 10px 15px;}
+  .clip, .song {display:flex; align-items:center; margin-bottom:10px; cursor:pointer;}
+  .clip img, .song img {width:120px; height:67px; object-fit:cover; margin-right:10px; border-radius:4px;}
+  .chem-grid {display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;}
+  .chem-card {width:80px; cursor:pointer; text-align:center;}
+  .chem-card img {width:80px; height:80px; border-radius:50%; object-fit:cover;}
+  .chem-detail img {width:100%; max-width:320px; height:auto; border-radius:4px; margin-bottom:10px;}
   .chem-clip {display:flex; align-items:center; margin-bottom:10px; cursor:pointer;}
   .chem-clip img {width:120px; height:67px; object-fit:cover; margin-right:10px; border-radius:4px;}
+  h2.chem-title {font-family:'Russo One', sans-serif; font-size:1.5rem; margin:10px 0;}
 </style>
 </head>
 <body>
@@ -29,7 +36,10 @@
 </header>
 
 <nav id="menu">
+  <a href="#" onclick="showPage('home')">Home</a>
+  <a href="#" onclick="showPage('songs')">Songs</a>
   <a href="#" onclick="showPage('chemistry')">Chemistry</a>
+  <a href="#" onclick="showPage('clips')">Clips</a>
 </nav>
 
 <main id="archive-section"></main>
@@ -40,33 +50,35 @@ function toggleMenu(){
   menu.style.left = (menu.style.left==='0px') ? '-220px' : '0px';
 }
 
-/* 🟢 Chemistry 데이터 (징버거 예시) */
+/* 🟢 데이터 */
 const data = {
+  years:[
+    {year:"2023", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", clips:[
+      {title:"Sopia가 알려주는 soop 통계", date:"2023-01-06", desc:"설명 작성 가능", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"},
+      {title:"Sopia의 최애 콘텐츠 아라포", date:"2023-01-06", desc:"설명 작성 가능", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
+    ]}
+  ],
+  songs:[
+    {songType:"cover", title:"커버곡 예시", date:"2023-05-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"},
+    {songType:"original", title:"오리지널곡 예시", date:"2023-06-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
+  ],
   chemistry:[
     {
       members:[
         {
           name:"징버거",
-          img:"https://wilful-aqua-wbpms0zisq.edgeone.app/2023_09_07_22_22_39.png",
+          profile:"https://wilful-aqua-wbpms0zisq.edgeone.app/2023_09_07_22_22_39.png",
           mainImg:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg",
-          chemistryWithSopia:[
-            {
-              title:"부가땅 생일선물로 빵 준 소피아",
-              date:"2025-10-08",
-              tags:["생일"],
-              thumb:"https://img.youtube.com/vi/r3jrA2LlWSs/0.jpg",
-              link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"
-            }
+          clips:[
+            {title:"부가땅 생일선물로 빵 준 소피아", date:"2025-10-08", tags:["생일"], thumb:"https://img.youtube.com/vi/r3jrA2LlWSs/0.jpg", link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"}
           ]
         },
-        {
-          name:"비밀소녀",
-          img:"https://via.placeholder.com/80",
-          mainImg:"https://via.placeholder.com/320x180",
-          chemistryWithSopia:[]
-        }
+        {name:"비밀소녀", profile:"https://via.placeholder.com/80", mainImg:"https://via.placeholder.com/320x180", clips:[]}
       ]
     }
+  ],
+  clips:[
+    {year:"2023", title:"클립 예시", date:"2023-07-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
   ]
 };
 
@@ -75,17 +87,52 @@ const section = document.getElementById('archive-section');
 /* 🟢 페이지 전환 */
 function showPage(page){
   section.innerHTML="";
-  if(page==="chemistry") renderChemistry();
+  if(page==="home") renderHome();
+  else if(page==="songs") renderSongs();
+  else if(page==="chemistry") renderChemistry();
+  else if(page==="clips") renderClips();
+}
+
+/* 🟢 Home */
+function renderHome(){
+  data.years.forEach(y=>{
+    let card = document.createElement('div');
+    card.className="year-card";
+    card.innerHTML=`<strong>${y.year}</strong><br><img src="${y.thumb}" style="width:100%; margin-top:5px; border-radius:4px;">`;
+    let clipsDiv = document.createElement('div');
+    clipsDiv.className="clips";
+    y.clips.forEach(c=>{
+      let clip = document.createElement('div');
+      clip.className="clip";
+      clip.innerHTML=`<img src="${c.thumb}"><div><span>${c.title}</span><br><span>${c.date}</span><br><span>${c.desc}</span></div>`;
+      clip.onclick=()=>{window.open(c.link,"_blank")};
+      clipsDiv.appendChild(clip);
+    });
+    card.onclick=()=>{clipsDiv.style.display=clipsDiv.style.display==="block"?"none":"block";};
+    section.appendChild(card);
+    section.appendChild(clipsDiv);
+  });
+}
+
+/* 🟢 Songs */
+function renderSongs(){
+  data.songs.forEach(s=>{
+    let card = document.createElement('div');
+    card.className="song-card";
+    card.innerHTML=`<div class="song"><img src="${s.thumb}"><div><strong>${s.title}</strong><br>${s.date}</div></div>`;
+    card.onclick=()=>{window.open(s.link,"_blank")};
+    section.appendChild(card);
+  });
 }
 
 /* 🟢 Chemistry 멤버 리스트 */
 function renderChemistry(){
   let grid = document.createElement('div');
-  grid.className="member-grid";
+  grid.className="chem-grid";
   data.chemistry[0].members.forEach(m=>{
     let card = document.createElement('div');
-    card.className="member-card";
-    card.innerHTML=`<img src="${m.img}"><div>${m.name}</div>`;
+    card.className="chem-card";
+    card.innerHTML=`<img src="${m.profile}"><div>${m.name}</div>`;
     card.onclick=()=>{renderChemistryDetail(m)};
     grid.appendChild(card);
   });
@@ -96,38 +143,39 @@ function renderChemistry(){
 function renderChemistryDetail(member){
   section.innerHTML="";
 
-  // 케미 타이틀
+  // 케미명
   let titleDiv = document.createElement('div');
-  titleDiv.style.marginBottom="15px";
-  titleDiv.innerHTML=`<h2 style="margin:0;">${member.name} × Sopia</h2>`;
+  titleDiv.innerHTML=`<h2 class="chem-title">${member.name} × SOPIA</h2>`;
   section.appendChild(titleDiv);
 
-  // 대표 이미지 (원본 비율 유지)
+  // 대표 이미지
   let imgDiv = document.createElement('div');
-  let mainImg = document.createElement('img');
-  mainImg.src = member.mainImg;
-  mainImg.style.width = "100%";
-  mainImg.style.height = "auto";
-  imgDiv.appendChild(mainImg);
+  imgDiv.innerHTML=`<img src="${member.mainImg}">`;
   section.appendChild(imgDiv);
 
-  // 클립 리스트
-  if(member.chemistryWithSopia.length > 0){
-    member.chemistryWithSopia.forEach(cl=>{
-      let clip = document.createElement('div');
-      clip.className="chem-clip";
-      clip.innerHTML=`
-        <img src="${cl.thumb}">
-        <div><strong>${cl.title}</strong><br>${cl.date}<br>태그: ${cl.tags.join(", ")}</div>
-      `;
-      clip.onclick=()=>{window.open(cl.link,"_blank")};
-      section.appendChild(clip);
-    });
-  }
+  // 클립
+  member.clips.forEach(cl=>{
+    let clip = document.createElement('div');
+    clip.className="chem-clip";
+    clip.innerHTML=`<img src="${cl.thumb}"><div><strong>${cl.title}</strong><br>${cl.date}<br>태그: ${cl.tags.join(", ")}</div>`;
+    clip.onclick=()=>{window.open(cl.link,"_blank")};
+    section.appendChild(clip);
+  });
 }
 
-// 초기 로딩 Chemistry
-showPage('chemistry');
+/* 🟢 Clips */
+function renderClips(){
+  data.clips.forEach(c=>{
+    let card = document.createElement('div');
+    card.className="clip-card";
+    card.innerHTML=`<div class="clip"><img src="${c.thumb}"><div><strong>${c.title}</strong><br>${c.date}</div></div>`;
+    card.onclick=()=>{window.open(c.link,"_blank")};
+    section.appendChild(card);
+  });
+}
+
+// 초기 로딩 Home
+showPage('home');
 </script>
 
 </body>
