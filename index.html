@@ -1,95 +1,51 @@
-<!DOCTYPE html><html lang="ko">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>SOPIA Archive</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sopia Archive</title>
+
   <style>
-    body { margin:0; font-family: Arial, sans-serif; background:#000; color:#fff; }
-    header { display:flex; align-items:center; gap:12px; padding:12px 16px; background:#000; border-bottom:1px solid #222; }
-    .menu-btn { font-size:20px; cursor:pointer; color:#e60012; }
-    h1 { font-size:18px; margin:0; }
-    #menu { position:fixed; top:0; left:-220px; width:200px; height:100%; background:#111; padding:16px; transition:.2s; }
-    #menu a { display:block; color:#fff; text-decoration:none; margin:12px 0; }
-    main { padding:16px; }
-    .btn { background:#e60012; border:none; color:#fff; padding:8px 12px; cursor:pointer; }
-    .card { border:1px solid #222; padding:12px; margin:8px 0; }
-    .thumb { width:100%; max-width:320px; }
-    input, textarea, select { width:100%; margin:6px 0; padding:6px; }
+    /* 기본 리셋 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      background-color: #000;
+      color: #e60000;
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .title {
+      font-size: 42px;
+      letter-spacing: 4px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #888;
+      letter-spacing: 2px;
+    }
   </style>
 </head>
 <body>
-<header>
-  <div class="menu-btn" onclick="toggleMenu()">☰</div>
-  <h1>SOPIA ARCHIVE</h1>
-</header><nav id="menu">
-  <a href="#" onclick="showPage('home')">Home</a>
-  <a href="#" onclick="showPage('songs')">Songs</a>
-  <a href="#" onclick="showPage('chemistry')">Chemistry</a>
-  <a href="#" onclick="showPage('clips')">Clips</a>
-</nav><main>
-  <button class="btn" onclick="showForm()">+ 콘텐츠 추가</button>  <section id="home" class="page"></section>
-  <section id="songs" class="page" style="display:none"></section>
-  <section id="chemistry" class="page" style="display:none"></section>
-  <section id="clips" class="page" style="display:none"></section>  <section id="form" style="display:none">
-    <h2>콘텐츠 추가 / 수정</h2>
-    <select id="type">
-      <option value="song">Song</option>
-      <option value="chemistry">Chemistry</option>
-      <option value="clip">Clip</option>
-    </select>
-    <input id="chemistryName" placeholder="케미명 (예: SOPIA × 캘리칼리)" />
-    <input id="chemistryId" placeholder="케미 ID (예: sopia-callikalli)" />
-    <input id="title" placeholder="제목" />
-    <input id="date" placeholder="날짜 YYYY-MM-DD" />
-    <input id="link" placeholder="유튜브 / SOOP 링크" />
-    <textarea id="desc" placeholder="설명"></textarea>
-    <button class="btn" onclick="addContent()">저장</button>
-  </section>
-</main><script>
-let data = [];
-
-function toggleMenu(){
-  const m = document.getElementById('menu');
-  m.style.left = m.style.left === '0px' ? '-220px' : '0px';
-}
-
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
-  document.getElementById(id).style.display='block';
-}
-
-function showForm(){
-  document.getElementById('form').style.display='block';
-}
-
-function addContent(){
-  const item = {
-    type: type.value,
-    chemistryName: chemistryName.value,
-    chemistryId: chemistryId.value,
-    title: title.value,
-    date: date.value,
-    link: link.value,
-    desc: desc.value
-  };
-  data.push(item);
-  render();
-  alert('저장됨');
-}
-
-function render(){
-  document.getElementById('home').innerHTML = '<h2>Home</h2>' + data.map(d=>card(d)).join('');
-  document.getElementById('songs').innerHTML = '<h2>Songs</h2>' + data.filter(d=>d.type==='song').map(card).join('');
-  document.getElementById('chemistry').innerHTML = '<h2>Chemistry</h2>' + data.filter(d=>d.type==='chemistry').map(card).join('');
-  document.getElementById('clips').innerHTML = '<h2>Clips</h2>' + data.filter(d=>d.type==='clip').map(card).join('');
-}
-
-function card(d){
-  let thumb = '';
-  if(d.link.includes('youtube')){
-    const id = d.link.split('v=')[1];
-    thumb = `<img class="thumb" src="https://img.youtube.com/vi/${id}/mqdefault.jpg">`;
-  }
-  return `<div class="card">${thumb}<div>${d.date}</div><b>${d.title}</b><p>${d.desc}</p></div>`;
-}
-</script></body>
+  <div class="center">
+    <div class="title">SOPIA ARCHIVE</div>
+    <div class="subtitle">personal fandom archive</div>
+  </div>
+</body>
 </html>
