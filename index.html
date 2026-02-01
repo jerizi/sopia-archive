@@ -53,26 +53,28 @@ function toggleMenu(){
 
 /* 🟢 데이터 */
 const data = {
+  years:[
+    {year:"2023", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", clips:[
+      {title:"Sopia가 알려주는 soop 통계", date:"2023-01-06", desc:"설명 작성 가능", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"},
+      {title:"Sopia의 최애 콘텐츠 아라포", date:"2023-01-06", desc:"설명 작성 가능", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
+    ]}
+  ],
+  songs:[
+    {songType:"cover", title:"커버곡 예시", date:"2023-05-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"},
+    {songType:"original", title:"오리지널곡 예시", date:"2023-06-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
+  ],
   chemistry:[
     {
       members:[
-        {
-          name:"징버거",
-          img:"https://wilful-aqua-wbpms0zisq.edgeone.app/2023_09_07_22_22_39.png",
-          chemistryWithSopia:[
-            {
-              title:"부가땅 생일선물로 빵 준 소피아",
-              date:"2025-10-08",
-              tags:["생일"],
-              thumb:"https://img.youtube.com/vi/r3jrA2LlWSs/0.jpg",
-              link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"
-            }
-          ],
-          mainImg:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg"
-        }
-        // 여기에 다른 멤버 추가 가능
+        {name:"징버거", img:"https://wilful-aqua-wbpms0zisq.edgeone.app/2023_09_07_22_22_39.png", chemistryWithSopia:[
+          {title:"부가땅 생일선물로 빵 준 소피아", date:"2025-10-08", tags:["생일"], thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"}
+        ]}
+        // 여기에 다른 멤버 추가 가능: {name:"비밀소녀", img:"링크", chemistryWithSopia:[...]}
       ]
     }
+  ],
+  clips:[
+    {year:"2023", title:"클립 예시", date:"2023-07-01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
   ]
 };
 
@@ -81,7 +83,51 @@ const section = document.getElementById('archive-section');
 /* 🟢 페이지 전환 */
 function showPage(page){
   section.innerHTML="";
-  if(page==="chemistry") renderChemistry();
+  if(page==="home") renderHome();
+  else if(page==="songs") renderSongs();
+  else if(page==="chemistry") renderChemistry();
+  else if(page==="clips") renderClips();
+}
+
+/* 🟢 Home */
+function renderHome(){
+  data.years.forEach(y=>{
+    let card = document.createElement('div');
+    card.className="year-card";
+    card.innerHTML=`<strong>${y.year}</strong><br><img src="${y.thumb}" style="width:100%; margin-top:5px; border-radius:4px;">`;
+    let clipsDiv = document.createElement('div');
+    clipsDiv.className="clips";
+    y.clips.forEach(c=>{
+      let clip = document.createElement('div');
+      clip.className="clip";
+      clip.innerHTML=`<img src="${c.thumb}"><div><span>${c.title}</span><br><span>${c.date}</span><br><span>${c.desc}</span></div>`;
+      clip.onclick=()=>{window.open(c.link,"_blank")};
+      clipsDiv.appendChild(clip);
+    });
+    card.onclick=()=>{clipsDiv.style.display=clipsDiv.style.display==="block"?"none":"block";};
+    section.appendChild(card);
+    section.appendChild(clipsDiv);
+  });
+}
+
+/* 🟢 Songs */
+function renderSongs(){
+  let filterDiv = document.createElement('div');
+  filterDiv.className="filter";
+  ['최신순','커버','오리지널곡'].forEach(f=>{
+    let btn = document.createElement('button');
+    btn.textContent=f;
+    btn.onclick=()=>{alert(f+" 필터 클릭 (추후 구현)");};
+    filterDiv.appendChild(btn);
+  });
+  section.appendChild(filterDiv);
+  data.songs.forEach(s=>{
+    let card = document.createElement('div');
+    card.className="song-card";
+    card.innerHTML=`<div class="song"><img src="${s.thumb}"><div><strong>${s.title}</strong><br>${s.date}</div></div>`;
+    card.onclick=()=>{window.open(s.link,"_blank")};
+    section.appendChild(card);
+  });
 }
 
 /* 🟢 Chemistry */
@@ -109,10 +155,10 @@ function renderChemistryDetail(member){
   titleDiv.innerHTML=`<h2 style="margin:0;">${member.name} × Sopia</h2>`;
   section.appendChild(titleDiv);
 
-  // 대표 이미지 (mainImg)
+  // 대표 이미지 (멤버 프로필)
   let imgDiv = document.createElement('div');
   imgDiv.style.marginBottom="15px";
-  imgDiv.innerHTML=`<img src="${member.mainImg}" style="width:150px; height:150px; border-radius:8px;">`;
+  imgDiv.innerHTML=`<img src="${member.img}" style="width:150px; height:150px; border-radius:50%;">`;
   section.appendChild(imgDiv);
 
   // 클립 리스트
@@ -133,8 +179,19 @@ function renderChemistryDetail(member){
   section.appendChild(detailDiv);
 }
 
-// 초기 로딩 Chemistry
-showPage('chemistry');
+/* 🟢 Clips */
+function renderClips(){
+  data.clips.forEach(c=>{
+    let card = document.createElement('div');
+    card.className="clip-card";
+    card.innerHTML=`<div class="clip"><img src="${c.thumb}"><div><strong>${c.title}</strong><br>${c.date}</div></div>`;
+    card.onclick=()=>{window.open(c.link,"_blank")};
+    section.appendChild(card);
+  });
+}
+
+// 초기 로딩 홈
+showPage('home');
 </script>
 
 </body>
