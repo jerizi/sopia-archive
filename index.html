@@ -13,20 +13,12 @@
   nav a {display:block; color:#e60000; padding:10px 20px; text-decoration:none;}
   nav a:hover {background:#1a1a1a;}
   main {padding-top:70px; max-width:700px; margin:0 auto; padding-bottom:40px;}
-  .year-card, .song-card, .chem-card, .clip-card {border:1px solid #333; border-radius:8px; margin-bottom:15px; cursor:pointer; background:#151515; padding:15px;}
-  .year-card:hover, .song-card:hover, .chem-card:hover, .clip-card:hover {background:#1a1a1a;}
-  .clips, .chem-detail {display:none; padding:10px 0 10px 15px;}
-  .clip, .song, .chem-clip {display:flex; align-items:center; margin-bottom:10px; cursor:pointer;}
-  .clip img, .song img, .chem-clip img {width:80px; height:45px; object-fit:cover; margin-right:10px; border-radius:4px;}
-  .chem-card img {width:60px; height:60px; object-fit:cover; border-radius:50%; margin-right:10px;}
-  .chem-card span {vertical-align:middle;}
-  .chem-detail img {width:120px; height:67px; object-fit:cover; margin-right:10px; border-radius:4px;}
-  .filter {display:flex; gap:10px; margin-bottom:15px;}
-  .filter button {background:#1a1a1a; border:none; color:#e60000; padding:5px 10px; border-radius:4px; cursor:pointer;}
-  .filter button.active {background:#e60000; color:#000;}
-  .member-grid {display:flex; flex-wrap:wrap; gap:10px;}
+  .member-grid {display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;}
   .member-card {width:80px; cursor:pointer; text-align:center;}
   .member-card img {width:80px; height:80px; border-radius:50%; object-fit:cover;}
+  .chem-detail img {width:100%; max-width:320px; height:auto; border-radius:4px; margin-bottom:10px;}
+  .chem-clip {display:flex; align-items:center; margin-bottom:10px; cursor:pointer;}
+  .chem-clip img {width:120px; height:67px; object-fit:cover; margin-right:10px; border-radius:4px;}
 </style>
 </head>
 <body>
@@ -37,10 +29,7 @@
 </header>
 
 <nav id="menu">
-  <a href="#" onclick="showPage('home')">Home</a>
-  <a href="#" onclick="showPage('songs')">Songs</a>
   <a href="#" onclick="showPage('chemistry')">Chemistry</a>
-  <a href="#" onclick="showPage('clips')">Clips</a>
 </nav>
 
 <main id="archive-section"></main>
@@ -51,7 +40,7 @@ function toggleMenu(){
   menu.style.left = (menu.style.left==='0px') ? '-220px' : '0px';
 }
 
-/* 🟢 데이터 */
+/* 🟢 Chemistry 데이터 예시 */
 const data = {
   chemistry:[
     {
@@ -64,13 +53,18 @@ const data = {
               title:"부가땅 생일선물로 빵 준 소피아",
               date:"2025-10-08",
               tags:["생일"],
-              thumb:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4",
+              thumb:"https://img.youtube.com/vi/r3jrA2LlWSs/0.jpg",
               link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"
             }
           ],
           mainImg:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg"
+        },
+        {
+          name:"비밀소녀",
+          img:"https://via.placeholder.com/80", // 임시 이미지
+          chemistryWithSopia:[],
+          mainImg:"https://via.placeholder.com/320x180" // 임시 대표 이미지
         }
-        // 여기에 다른 멤버 추가 가능
       ]
     }
   ]
@@ -84,9 +78,8 @@ function showPage(page){
   if(page==="chemistry") renderChemistry();
 }
 
-/* 🟢 Chemistry */
+/* 🟢 Chemistry 멤버 리스트 */
 function renderChemistry(){
-  // 멤버 프로필 카드 리스트
   let grid = document.createElement('div');
   grid.className="member-grid";
   data.chemistry[0].members.forEach(m=>{
@@ -109,28 +102,24 @@ function renderChemistryDetail(member){
   titleDiv.innerHTML=`<h2 style="margin:0;">${member.name} × Sopia</h2>`;
   section.appendChild(titleDiv);
 
-  // 대표 이미지 (mainImg)
+  // 대표 이미지 (16:9 비율 유지)
   let imgDiv = document.createElement('div');
-  imgDiv.style.marginBottom="15px";
-  imgDiv.innerHTML=`<img src="${member.mainImg}" style="width:150px; height:150px; border-radius:8px;">`;
+  imgDiv.innerHTML=`<img src="${member.mainImg}">`;
   section.appendChild(imgDiv);
 
   // 클립 리스트
-  let detailDiv = document.createElement('div');
-  member.chemistryWithSopia.forEach(cl=>{
-    let clip = document.createElement('div');
-    clip.className="chem-clip card";
-    clip.style.display="flex";
-    clip.style.alignItems="center";
-    clip.style.marginBottom="10px";
-    clip.innerHTML=`
-      <img src="${cl.thumb}" style="width:120px; height:67px; object-fit:cover; margin-right:10px; border-radius:4px;">
-      <div><strong>${cl.title}</strong><br>${cl.date}<br>태그: ${cl.tags.join(", ")}</div>
-    `;
-    clip.onclick=()=>{window.open(cl.link,"_blank")};
-    detailDiv.appendChild(clip);
-  });
-  section.appendChild(detailDiv);
+  if(member.chemistryWithSopia.length > 0){
+    member.chemistryWithSopia.forEach(cl=>{
+      let clip = document.createElement('div');
+      clip.className="chem-clip";
+      clip.innerHTML=`
+        <img src="${cl.thumb}">
+        <div><strong>${cl.title}</strong><br>${cl.date}<br>태그: ${cl.tags.join(", ")}</div>
+      `;
+      clip.onclick=()=>{window.open(cl.link,"_blank")};
+      section.appendChild(clip);
+    });
+  }
 }
 
 // 초기 로딩 Chemistry
