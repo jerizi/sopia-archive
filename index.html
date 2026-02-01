@@ -6,10 +6,13 @@
 <title>SOPIA ARCHIVE</title>
 <style>
   body {margin:0; padding:0; background:#000; color:#e60000; font-family:sans-serif;}
-  header {height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;}
-  header h1 {font-size:3rem; letter-spacing:.2em; margin-bottom:10px;}
-  header .subtitle {font-size:0.9rem; opacity:0.6;}
-  section {max-width:700px; margin:0 auto; padding:20px;}
+  header {position:fixed; top:0; left:0; width:100%; background:#0e0e0e; display:flex; justify-content:space-between; align-items:center; padding:10px 20px; z-index:1000; border-bottom:1px solid #333;}
+  header h1 {font-size:1.5rem; margin:0;}
+  .menu-icon {font-size:1.5rem; cursor:pointer;}
+  nav {position:fixed; top:50px; left:-200px; width:200px; background:#151515; height:100%; padding-top:20px; transition:0.3s; z-index:999;}
+  nav a {display:block; color:#e60000; padding:10px 20px; text-decoration:none;}
+  nav a:hover {background:#1a1a1a;}
+  main {padding-top:70px; max-width:700px; margin:0 auto; padding-bottom:40px;}
   .year-card, .chem-card {border:1px solid #333; border-radius:8px; margin-bottom:15px; cursor:pointer; background:#151515; padding:15px;}
   .year-card:hover, .chem-card:hover {background:#1a1a1a;}
   .clips, .chem-detail {display:none; padding:10px 0 10px 15px;}
@@ -18,89 +21,106 @@
   .clip div span:first-child {font-weight:bold;}
   .clip div span:last-child {font-size:0.8rem; opacity:0.7;}
   .chem-card img {width:60px; height:60px; object-fit:cover; border-radius:50%; margin-right:10px;}
+  .chem-card span {vertical-align:middle;}
 </style>
 </head>
 <body>
 
 <header>
   <h1>SOPIA ARCHIVE</h1>
-  <div class="subtitle">personal fandom archive</div>
+  <div class="menu-icon" onclick="toggleMenu()">☰</div>
 </header>
 
-<section id="archive-section">
+<nav id="menu">
+  <a href="#">홈</a>
+  <a href="#">노래</a>
+  <a href="#">케미</a>
+  <a href="#">클립</a>
+</nav>
+
+<main id="archive-section">
   <!-- 연도/케미 카드가 JS에서 자동 생성됨 -->
-</section>
+</main>
 
 <script>
-/* 🟢 데이터 영역 - 여기만 바꾸면 사이트 내용 변경 가능 */
+/* 🟢 메뉴 토글 */
+function toggleMenu(){
+  const menu = document.getElementById('menu');
+  menu.style.left = (menu.style.left === '0px') ? '-200px' : '0px';
+}
+
+/* 🟢 데이터 영역 */
 const archiveData = {
   years: [
-    {
-      year: "2023",
-      clips: [
-        {title:"1/6 소피아가 알려주는 soop 통계", date:"2023.01.06", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"},
-        {title:"1/6 소피아의 최애 콘텐츠 아라포", date:"2023.01.06", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
-      ]
-    },
-    {
-      year: "2024",
-      clips: [
-        {title:"1/5 사육상중하망", date:"2024.01.05", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
-      ]
-    }
+    {year:"2023", clips:[
+      {title:"1/6 Sopia가 알려주는 soop 통계", date:"2023.01.06", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"},
+      {title:"1/6 Sopia의 최애 콘텐츠 아라포", date:"2023.01.06", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
+    ]}
   ],
-  chemistry: [
+  chemistry:[
     {
-      members: ["SOPHIA","SECRET GIRL"],
-      img:"https://via.placeholder.com/60",
-      clips: [
-        {title:"케미 클립 예시", date:"2023.02.01", thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg", link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
+      members:["징버거","소피아"],
+      img:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg",
+      clips:[
+        {
+          title:"징버거한테 생일선물로 빵준 소피아",
+          date:"2025-10-08",
+          thumb:"https://wilful-aqua-wbpms0zisq.edgeone.app/2023_09_07_22_22_39.png",
+          link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"
+        }
       ]
     }
   ]
 };
 
-/* 🟢 렌더링 함수 */
+/* 🟢 렌더링 */
 const section = document.getElementById("archive-section");
 
+// 연도별 클립
 archiveData.years.forEach(y=>{
   let card = document.createElement("div");
-  card.className = "year-card";
+  card.className="year-card";
   card.textContent = y.year;
-  card.onclick = ()=>{clipsDiv.style.display = clipsDiv.style.display==="block"?"none":"block";};
-
   let clipsDiv = document.createElement("div");
-  clipsDiv.className = "clips";
+  clipsDiv.className="clips";
+
   y.clips.forEach(c=>{
     let clip = document.createElement("div");
-    clip.className = "clip";
+    clip.className="clip";
     clip.innerHTML = `<img src="${c.thumb}"><div><span>${c.title}</span><span>${c.date}</span></div>`;
     clip.onclick = ()=>{window.open(c.link,"_blank");};
     clipsDiv.appendChild(clip);
   });
 
+  card.onclick=()=>{clipsDiv.style.display = clipsDiv.style.display==="block"?"none":"block";};
   section.appendChild(card);
   section.appendChild(clipsDiv);
 });
 
+// 케미 카드
 archiveData.chemistry.forEach(c=>{
   let chemCard = document.createElement("div");
-  chemCard.className = "chem-card";
-  chemCard.innerHTML = `<img src="${c.img}"><span>${c.members.join(" & ")}</span>`;
+  chemCard.className="chem-card";
+  chemCard.innerHTML=`<img src="${c.img}"><span>${c.members.join(" × ")}</span>`;
   let chemDetail = document.createElement("div");
-  chemDetail.className = "chem-detail";
+  chemDetail.className="chem-detail";
+
   c.clips.forEach(cl=>{
     let clip = document.createElement("div");
     clip.className="clip";
-    clip.innerHTML = `<img src="${cl.thumb}"><div><span>${cl.title}</span><span>${cl.date}</span></div>`;
+    clip.innerHTML=`<img src="${cl.thumb}"><div><span>${cl.title}</span><span>${cl.date}</span></div>`;
     clip.onclick=()=>{window.open(cl.link,"_blank");};
     chemDetail.appendChild(clip);
   });
+
   chemCard.onclick=()=>{chemDetail.style.display = chemDetail.style.display==="block"?"none":"block";};
   section.appendChild(chemCard);
   section.appendChild(chemDetail);
 });
 </script>
+
+</body>
+</html></script>
 
 </body>
 </html>
