@@ -1,104 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOPIA ARCHIVE</title>
+<style>
+  body {margin:0; padding:0; background:#000; color:#e60000; font-family:sans-serif;}
+  header {position:fixed; top:0; left:0; width:100%; background:#0e0e0e; display:flex; justify-content:space-between; align-items:center; padding:10px 15px; z-index:1000; border-bottom:1px solid #333;}
+  header h1 {font-size:1.5rem; margin:0;}
+  .menu-icon {font-size:1.8rem; cursor:pointer; margin-left:5px;}
+  nav {position:fixed; top:50px; left:-220px; width:220px; background:#151515; height:100%; padding-top:20px; transition:0.3s; z-index:999;}
+  nav a {display:block; color:#e60000; padding:10px 20px; text-decoration:none;}
+  nav a:hover {background:#1a1a1a;}
+  main {padding-top:170px; max-width:700px; margin:0 auto; padding-bottom:40px;}
+  .year-card, .song-card, .chem-card, .clip-card {border:1px solid #333; border-radius:8px; margin-bottom:15px; cursor:pointer; background:#151515; padding:15px;}
+  .year-card:hover, .song-card:hover, .chem-card:hover, .clip-card:hover {background:#1a1a1a;}
+  .clips, .chem-detail {display:none; padding:10px 0 10px 15px;}
+  .clip, .song, .chem-clip {display:flex; align-items:center; margin-bottom:10px; cursor:pointer;}
+  .clip img, .song img, .chem-clip img {width:80px; height:45px; object-fit:cover; margin-right:10px; border-radius:4px;}
+  .chem-card img {width:60px; height:60px; object-fit:cover; border-radius:50%; margin-right:10px;}
+  .chem-card span {vertical-align:middle;}
+  .chem-detail img {width:120px; height:67px; object-fit:cover; margin-right:10px; border-radius:4px;}
+  .filter {display:flex; gap:10px; margin-bottom:15px;}
+  .filter button {background:#1a1a1a; border:none; color:#e60000; padding:5px 10px; border-radius:4px; cursor:pointer;}
+  .filter button.active {background:#e60000; color:#000;}
+  .member-grid {display:flex; flex-wrap:wrap; gap:10px;}
+  .member-card {width:80px; cursor:pointer; text-align:center;}
+  .member-card img {width:80px; height:80px; border-radius:50%; object-fit:cover;}
+  /* 달력 스타일 */
+  .calendar-container {position:fixed; top:50px; left:0; width:100%; background:#0e0e0e; z-index:998; text-align:center; padding:10px 0; border-bottom:1px solid #333;}
+  .calendar-header {display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:5px;}
+  .calendar-header button {background:#1a1a1a; color:#e60000; border:none; padding:5px 10px; cursor:pointer; border-radius:4px;}
+  .calendar-grid {display:grid; grid-template-columns:repeat(7, 1fr); gap:2px; text-align:center; max-width:350px; margin:0 auto;}
+  .calendar-grid div {padding:6px 0; border-radius:4px;}
+  .calendar-grid .day-header {font-weight:bold; color:#ff6666;}
+  .calendar-grid .day {background:#151515; cursor:pointer;}
+  .calendar-grid .day:hover {background:#1a1a1a;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>SOPIA ARCHIVE</h1>
+  <div class="menu-icon" onclick="toggleMenu()">☰</div>
+</header>
+
+<nav id="menu">
+  <a href="#" onclick="showPage('home')">Home</a>
+  <a href="#" onclick="showPage('songs')">Songs</a>
+  <a href="#" onclick="showPage('chemistry')">Chemistry</a>
+  <a href="#" onclick="showPage('clips')">Clips</a>
+</nav>
+
+<!-- 달력 -->
+<div class="calendar-container">
+  <div class="calendar-header">
+    <button id="prev">&lt;</button>
+    <span id="month-year"></span>
+    <button id="next">&gt;</button>
+  </div>
+  <div class="calendar-grid" id="calendar-grid">
+    <!-- 요일 + 날짜 표시 -->
+  </div>
+</div>
+
+<main id="archive-section"></main>
+
 <script>
-/* 🟢 Home 데이터 (예시) */
-const homeData = {
-  months: []
+function toggleMenu(){
+  const menu = document.getElementById('menu');
+  menu.style.left = (menu.style.left==='0px') ? '-220px' : '0px';
+}
+
+/* 🟢 데이터 */
+const data = {
+  chemistry:[
+    {
+      members:[
+        {
+          name:"징버거",
+          img:"https://wilful-aqua-wbpms0zisq.edgeone.app/2023_09_07_22_22_39.png",
+          chemistryWithSopia:[
+            {
+              title:"부가땅 생일선물로 빵 준 소피아",
+              date:"2025-10-08",
+              tags:["생일"],
+              thumb:"https://img.youtube.com/vi/r3jrA2LlWSs/0.jpg",
+              link:"https://youtu.be/r3jrA2LlWSs?si=w62NWDVFcOo1R1o4"
+            }
+          ],
+          mainImg:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg"
+        }
+      ]
+    }
+  ]
 };
 
-// 2024-01 ~ 2027-01
-for(let y=2024; y<=2027; y++){
-  for(let m=1; m<=12; m++){
-    if(y===2027 && m>1) break;
-    homeData.months.push({
-      year:y,
-      month:m,
-      display:`${y}년 ${m}월`,
-      cards:[{title:`예시 카드 ${y}-${m}`, thumb:"https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg"}]
-    });
-  }
-}
-
-let currentIndex = 0;
-
-function renderHome(){
-  section.innerHTML="";
-
-  // 달력 상단
-  let calDiv = document.createElement('div');
-  calDiv.style.display="flex";
-  calDiv.style.justifyContent="center";
-  calDiv.style.alignItems="center";
-  calDiv.style.marginBottom="15px";
-  calDiv.style.gap="10px";
-
-  let prevBtn = document.createElement('button');
-  prevBtn.textContent="<";
-  prevBtn.onclick=()=>{if(currentIndex>0){currentIndex--; renderHome();}};
-
-  let nextBtn = document.createElement('button');
-  nextBtn.textContent=">";
-  nextBtn.onclick=()=>{if(currentIndex<homeData.months.length-1){currentIndex++; renderHome();}};
-
-  let monthSpan = document.createElement('span');
-  monthSpan.style.color="#e60000";
-  monthSpan.style.fontWeight="bold";
-  monthSpan.textContent=homeData.months[currentIndex].display;
-
-  calDiv.appendChild(prevBtn);
-  calDiv.appendChild(monthSpan);
-  calDiv.appendChild(nextBtn);
-
-  section.appendChild(calDiv);
-
-  // 카드 영역
-  let cardsDiv = document.createElement('div');
-  homeData.months[currentIndex].cards.forEach(c=>{
-    let card = document.createElement('div');
-    card.className="year-card";
-    card.innerHTML=`<strong>${c.title}</strong><br><img src="${c.thumb}" style="width:100%; margin-top:5px; border-radius:4px;">`;
-    cardsDiv.appendChild(card);
-  });
-  section.appendChild(cardsDiv);
-}
+const section = document.getElementById('archive-section');
 
 /* 🟢 페이지 전환 */
 function showPage(page){
   section.innerHTML="";
   if(page==="chemistry") renderChemistry();
-  else if(page==="home") renderHome();
 }
 
-// 초기 로딩
-showPage('chemistry');
-</script>  // 달력 상단
-  let calDiv = document.createElement('div');
-  calDiv.className="calendar";
-  let prevBtn = document.createElement('button'); prevBtn.textContent="<";
-  let nextBtn = document.createElement('button'); nextBtn.textContent=">";
-  let monthSpan = document.createElement('span');
-  monthSpan.textContent=data.years[currentIndex].display;
-  prevBtn.onclick=()=>{if(currentIndex>0){currentIndex--; monthSpan.textContent=data.years[currentIndex].display; renderMonth();}};
-  nextBtn.onclick=()=>{if(currentIndex<data.years.length-1){currentIndex++; monthSpan.textContent=data.years[currentIndex].display; renderMonth();}};
-  calDiv.appendChild(prevBtn); calDiv.appendChild(monthSpan); calDiv.appendChild(nextBtn);
-  section.appendChild(calDiv);
-
-  // 달별 카드 영역
-  let cardsDiv = document.createElement('div');
-  cardsDiv.id="month-cards";
-  section.appendChild(cardsDiv);
-  renderMonth();
-}
-
-function renderMonth(){
-  const cardsDiv = document.getElementById('month-cards');
-  cardsDiv.innerHTML="";
-  let y = data.years[currentIndex];
-  let card = document.createElement('div');
-  card.className="year-card";
-  card.innerHTML=`<strong>${y.display}</strong><br><img src="${y.thumb}" style="width:100%; border-radius:4px;">`;
-  cardsDiv.appendChild(card);
-}
-
-/* 🟢 Chemistry 화면 */
+/* 🟢 Chemistry */
 function renderChemistry(){
   let grid = document.createElement('div');
   grid.className="member-grid";
@@ -120,7 +126,6 @@ function renderChemistryDetail(member){
   titleDiv.innerHTML=`<h2 style="margin:0;">${member.name} × Sopia</h2>`;
   section.appendChild(titleDiv);
 
-  // 대표 이미지 원본 비율 유지
   let imgDiv = document.createElement('div');
   imgDiv.style.marginBottom="15px";
   imgDiv.innerHTML=`<img src="${member.mainImg}" style="max-width:100%; height:auto; border-radius:8px;">`;
@@ -129,9 +134,12 @@ function renderChemistryDetail(member){
   let detailDiv = document.createElement('div');
   member.chemistryWithSopia.forEach(cl=>{
     let clip = document.createElement('div');
-    clip.className="chem-clip";
+    clip.className="chem-clip card";
+    clip.style.display="flex";
+    clip.style.alignItems="center";
+    clip.style.marginBottom="10px";
     clip.innerHTML=`
-      <img src="${cl.thumb}">
+      <img src="${cl.thumb}" style="width:120px; height:67px; object-fit:cover; margin-right:10px; border-radius:4px;">
       <div><strong>${cl.title}</strong><br>${cl.date}<br>태그: ${cl.tags.join(", ")}</div>
     `;
     clip.onclick=()=>{window.open(cl.link,"_blank")};
@@ -140,8 +148,52 @@ function renderChemistryDetail(member){
   section.appendChild(detailDiv);
 }
 
-// 초기 로딩 홈 화면
-showPage('home');
+// 초기 로딩 Chemistry
+showPage('chemistry');
+
+/* 🟢 달력 JS */
+const startYear = 2024, startMonth=1, endYear=2027, endMonth=1;
+let currentYear = startYear, currentMonth = startMonth;
+const monthYearSpan = document.getElementById('month-year');
+const calendarGrid = document.getElementById('calendar-grid');
+const daysOfWeek = ['일','월','화','수','목','금','토'];
+
+function renderCalendar(year, month){
+  calendarGrid.innerHTML='';
+  // 요일
+  for(const d of daysOfWeek){
+    const div = document.createElement('div');
+    div.className='day-header';
+    div.textContent=d;
+    calendarGrid.appendChild(div);
+  }
+  const firstDay = new Date(year, month-1, 1).getDay();
+  const lastDate = new Date(year, month, 0).getDate();
+  for(let i=0;i<firstDay;i++){
+    calendarGrid.appendChild(document.createElement('div'));
+  }
+  for(let d=1; d<=lastDate; d++){
+    const div = document.createElement('div');
+    div.className='day';
+    div.textContent=d;
+    calendarGrid.appendChild(div);
+  }
+  monthYearSpan.textContent=`${year}년 ${month}월`;
+}
+
+document.getElementById('prev').onclick = ()=>{
+  currentMonth--; if(currentMonth<1){currentMonth=12; currentYear--;}
+  if(currentYear<startYear || (currentYear===startYear && currentMonth<startMonth)) return;
+  renderCalendar(currentYear, currentMonth);
+};
+document.getElementById('next').onclick = ()=>{
+  currentMonth++; if(currentMonth>12){currentMonth=1; currentYear++;}
+  if(currentYear>endYear || (currentYear===endYear && currentMonth>endMonth)) return;
+  renderCalendar(currentYear, currentMonth);
+};
+
+// 초기 달력 렌더
+renderCalendar(currentYear, currentMonth);
 </script>
 
 </body>
