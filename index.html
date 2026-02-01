@@ -12,7 +12,7 @@
   nav {position:fixed; top:50px; left:-220px; width:220px; background:#151515; height:100%; padding-top:20px; transition:0.3s; z-index:999;}
   nav a {display:block; color:#e60000; padding:10px 20px; text-decoration:none;}
   nav a:hover {background:#1a1a1a;}
-  main {padding-top:70px; max-width:700px; margin:0 auto; padding-bottom:40px;}
+  main {padding-top:140px; max-width:700px; margin:0 auto; padding-bottom:40px;} /* 달력 높이 + header 70px */
   .year-card, .song-card, .chem-card, .clip-card {border:1px solid #333; border-radius:8px; margin-bottom:15px; cursor:pointer; background:#151515; padding:15px;}
   .year-card:hover, .song-card:hover, .chem-card:hover, .clip-card:hover {background:#1a1a1a;}
   .clips, .chem-detail {display:none; padding:10px 0 10px 15px;}
@@ -27,6 +27,11 @@
   .member-grid {display:flex; flex-wrap:wrap; gap:10px;}
   .member-card {width:80px; cursor:pointer; text-align:center;}
   .member-card img {width:80px; height:80px; border-radius:50%; object-fit:cover;}
+
+  /* 🟢 달력 스타일 */
+  .calendar {display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:10px;}
+  .calendar button {background:#1a1a1a; border:none; color:#e60000; padding:5px 10px; border-radius:4px; cursor:pointer;}
+  .calendar span {font-weight:bold;}
 </style>
 </head>
 <body>
@@ -43,6 +48,13 @@
   <a href="#" onclick="showPage('clips')">Clips</a>
 </nav>
 
+<!-- 🟢 달력 추가 -->
+<div class="calendar">
+  <button onclick="prevMonth()">&lt;</button>
+  <span id="current-month"></span>
+  <button onclick="nextMonth()">&gt;</button>
+</div>
+
 <main id="archive-section"></main>
 
 <script>
@@ -51,7 +63,31 @@ function toggleMenu(){
   menu.style.left = (menu.style.left==='0px') ? '-220px' : '0px';
 }
 
-/* 🟢 데이터 */
+/* 🟢 달력 JS */
+let currentYear = 2024;
+let currentMonth = 1; // 1월 시작
+const currentMonthSpan = document.getElementById('current-month');
+
+function updateCalendar(){
+  currentMonthSpan.textContent = `${currentYear}년 ${currentMonth}월`;
+}
+
+function prevMonth(){
+  currentMonth--;
+  if(currentMonth<1){ currentMonth=12; currentYear--; if(currentYear<2024) currentYear=2024; }
+  updateCalendar();
+}
+
+function nextMonth(){
+  currentMonth++;
+  if(currentMonth>12){ currentMonth=1; currentYear++; if(currentYear>2027) currentYear=2027; }
+  updateCalendar();
+}
+
+// 초기 달력 표시
+updateCalendar();
+
+/* 🟢 기존 데이터 */
 const data = {
   chemistry:[
     {
@@ -70,7 +106,6 @@ const data = {
           ],
           mainImg:"https://characteristic-crimson-1bdnfl144o.edgeone.app/Screenshot_20250322_130326_YouTube.jpg"
         }
-        // 여기에 다른 멤버 추가 가능
       ]
     }
   ]
@@ -86,7 +121,6 @@ function showPage(page){
 
 /* 🟢 Chemistry */
 function renderChemistry(){
-  // 멤버 프로필 카드 리스트
   let grid = document.createElement('div');
   grid.className="member-grid";
   data.chemistry[0].members.forEach(m=>{
@@ -102,20 +136,16 @@ function renderChemistry(){
 /* 🟢 Chemistry 상세 */
 function renderChemistryDetail(member){
   section.innerHTML="";
-
-  // 케미 타이틀
   let titleDiv = document.createElement('div');
   titleDiv.style.marginBottom="15px";
   titleDiv.innerHTML=`<h2 style="margin:0;">${member.name} × Sopia</h2>`;
   section.appendChild(titleDiv);
 
-  // 대표 이미지 (mainImg)
   let imgDiv = document.createElement('div');
   imgDiv.style.marginBottom="15px";
   imgDiv.innerHTML=`<img src="${member.mainImg}" style="width:150px; height:150px; border-radius:8px;">`;
   section.appendChild(imgDiv);
 
-  // 클립 리스트
   let detailDiv = document.createElement('div');
   member.chemistryWithSopia.forEach(cl=>{
     let clip = document.createElement('div');
