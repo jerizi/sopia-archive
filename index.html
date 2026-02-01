@@ -1,51 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sopia Archive</title>
-
-  <style>
-    /* 기본 리셋 */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      width: 100vw;
-      height: 100vh;
-      background-color: #000;
-      color: #e60000;
-      font-family: Arial, Helvetica, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .center {
-      text-align: center;
-    }
-
-    .title {
-      font-size: 42px;
-      letter-spacing: 4px;
-      font-weight: bold;
-    }
-
-    .subtitle {
-      margin-top: 12px;
-      font-size: 14px;
-      color: #888;
-      letter-spacing: 2px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOPIA ARCHIVE</title>
+<style>
+  body {margin:0; padding:0; background:#000; color:#e60000; font-family:sans-serif;}
+  header {height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;}
+  header h1 {font-size:3rem; letter-spacing:.2em; margin-bottom:10px;}
+  header .subtitle {font-size:0.9rem; opacity:0.6;}
+  section {max-width:700px; margin:0 auto; padding:20px;}
+  .year-card {border:1px solid #333; border-radius:8px; margin-bottom:15px; cursor:pointer; background:#151515;}
+  .year-card h2 {padding:15px; font-size:1.2rem;}
+  .clips {display:none; padding:0 15px 15px 15px;}
+  .clip {border-top:1px solid #333; padding:10px 0; display:flex; align-items:center;}
+  .clip img {width:80px; height:45px; object-fit:cover; margin-right:10px; border-radius:4px;}
+  .clip div {display:flex; flex-direction:column;}
+  .clip div span:first-child {font-weight:bold;}
+  .clip div span:last-child {font-size:0.8rem; opacity:0.7;}
+  .chem-card {border:1px solid #333; border-radius:8px; margin-bottom:15px; background:#151515; padding:10px; display:flex; align-items:center; cursor:pointer;}
+  .chem-card img {width:60px; height:60px; object-fit:cover; border-radius:50%; margin-right:10px;}
+  .chem-detail {display:none; padding:10px 0 0 0;}
+</style>
 </head>
 <body>
-  <div class="center">
-    <div class="title">SOPIA ARCHIVE</div>
-    <div class="subtitle">personal fandom archive</div>
+
+<header>
+  <h1>SOPIA ARCHIVE</h1>
+  <div class="subtitle">personal fandom archive</div>
+</header>
+
+<section>
+  <h2 style="color:#e60000;">Years</h2>
+
+  <!-- Year example -->
+  <div class="year-card" onclick="toggleClips(this)">2023</div>
+  <div class="clips">
+    <div class="clip">
+      <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg" alt="clip1">
+      <div>
+        <span>1/6 소피아가 알려주는 soop 통계</span>
+        <span>2023.01.06</span>
+      </div>
+    </div>
+    <div class="clip">
+      <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg" alt="clip2">
+      <div>
+        <span>1/6 소피아의 최애 콘텐츠 아라포</span>
+        <span>2023.01.06</span>
+      </div>
+    </div>
   </div>
+
+  <div class="year-card" onclick="toggleClips(this)">2024</div>
+  <div class="clips">
+    <div class="clip">
+      <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg" alt="clip3">
+      <div>
+        <span>1/5 사육상중하망</span>
+        <span>2024.01.05</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="color:#e60000;">Chemistry</h2>
+
+  <div class="chem-card" onclick="toggleChem(this)">
+    <img src="https://via.placeholder.com/60" alt="sophia">
+    <span>SOPHIA & SECRET GIRL</span>
+    <div class="chem-detail">
+      <div class="clip">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg" alt="clip">
+        <div>
+          <span>클립 제목 예시</span>
+          <span>2023.02.01</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  function toggleClips(card){
+    let next = card.nextElementSibling;
+    next.style.display = (next.style.display === "block") ? "none" : "block";
+  }
+
+  function toggleChem(card){
+    let detail = card.querySelector('.chem-detail');
+    detail.style.display = (detail.style.display === "block") ? "none" : "block";
+  }
+
+  // 클릭 시 유튜브 링크 이동
+  document.querySelectorAll('.clip').forEach(c=>{
+    c.addEventListener('click', e=>{
+      window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ','_blank');
+    });
+  });
+</script>
+
 </body>
 </html>
